@@ -3,16 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalender PRO 2025</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<title>Kalender Interaktif 2025</title>
 
 <style>
 body{
     font-family: Arial;
     margin:0;
     background: linear-gradient(135deg,#ffd1dc,#ffe6f0);
-    transition:0.4s;
 }
 
 .dark{
@@ -21,31 +18,24 @@ body{
 }
 
 .container{
-    max-width:1100px;
+    max-width:1000px;
     margin:auto;
     padding:20px;
-    animation:fadeIn 1.5s ease;
-}
-
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(20px);}
-to{opacity:1;}
 }
 
 .header{
     display:flex;
     justify-content:space-between;
-    flex-wrap:wrap;
+    align-items:center;
 }
 
 button{
     background:#ff6fa5;
     border:none;
-    padding:10px 14px;
+    padding:8px 12px;
     color:white;
-    border-radius:10px;
+    border-radius:8px;
     cursor:pointer;
-    margin:5px;
 }
 
 .calendar{
@@ -53,11 +43,11 @@ button{
     padding:15px;
     border-radius:15px;
     margin-top:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.2);
-    animation:fadeIn 1s ease;
 }
 
-.dark .calendar{background:#222;}
+.dark .calendar{
+    background:#222;
+}
 
 .month{
     text-align:center;
@@ -66,7 +56,10 @@ button{
     font-weight:bold;
 }
 
-table{width:100%;border-collapse:collapse;}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
 
 th{
     background:#ff6fa5;
@@ -76,19 +69,18 @@ th{
 
 td{
     border:1px solid #eee;
-    height:75px;
+    height:70px;
     text-align:right;
     padding:5px;
     cursor:pointer;
-    position:relative;
 }
 
 .holiday{
-    background:#ffd6e7;
+    background:#ffccd9;
 }
 
 .note{
-    font-size:11px;
+    font-size:10px;
     color:#d6004c;
     text-align:left;
 }
@@ -100,21 +92,20 @@ td{
     border-radius:15px;
 }
 
-.dark .todo{background:#222;}
+.dark .todo{
+    background:#222;
+}
 
 </style>
 </head>
 
 <body>
 
-<div class="container" id="app">
+<div class="container">
 
 <div class="header">
-<h2>💖 Kalender PRO 2025</h2>
-<div>
-<button onclick="toggleDark()">🌙 Dark</button>
-<button onclick="exportPDF()">📄 Export PDF</button>
-</div>
+<h2>💖 Kalender Interaktif 2025</h2>
+<button onclick="toggleDark()">🌙 Dark Mode</button>
 </div>
 
 <div id="calendar"></div>
@@ -130,39 +121,16 @@ td{
 
 <script>
 
-const holidays = {
-"2025-01-01":"Tahun Baru",
-"2025-01-27":"Isra Mi'raj",
-"2025-01-29":"Imlek",
-"2025-03-29":"Nyepi",
-"2025-03-31":"Idul Fitri",
-"2025-04-01":"Idul Fitri",
-"2025-04-18":"Wafat Isa Almasih",
-"2025-04-20":"Paskah",
-"2025-05-01":"Hari Buruh",
-"2025-05-12":"Waisak",
-"2025-05-29":"Kenaikan Isa",
-"2025-06-01":"Pancasila",
-"2025-06-07":"Idul Adha",
-"2025-06-27":"Tahun Baru Islam",
-"2025-08-17":"Kemerdekaan",
-"2025-09-05":"Maulid Nabi",
-"2025-12-25":"Natal"
-};
+const holidays = [
+"2025-02-01","2025-03-29","2025-04-18","2025-05-01",
+"2025-06-01","2025-08-17","2025-12-25"
+];
 
 function toggleDark(){
 document.body.classList.toggle("dark");
 }
 
-function saveNote(date,text){
-localStorage.setItem(date,text);
-}
-
-function getNote(date){
-return localStorage.getItem(date) || "";
-}
-
-function createCalendar(month,year){
+function createCalendar(month, year){
 const names=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
 
 let firstDay=new Date(year,month).getDay();
@@ -176,15 +144,10 @@ for(let i=0;i<firstDay;i++) html+="<td></td>";
 
 for(let d=1;d<=days;d++){
 let dateStr=year+"-"+String(month+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
-let holidayClass=holidays[dateStr]?"holiday":"";
-let note=getNote(dateStr);
+let holidayClass=holidays.includes(dateStr)?"holiday":"";
 
-html+=`
-<td class="${holidayClass}" onclick="addNote('${dateStr}')">
-${d}
-<div class="note">${holidays[dateStr] || ""}</div>
-<div class="note" id="note-${dateStr}">${note}</div>
-</td>`;
+html+=`<td class="${holidayClass}" onclick="addNote('${dateStr}',this)">
+${d}<div class="note" id="note-${dateStr}"></div></td>`;
 
 if((d+firstDay)%7===0) html+="</tr><tr>";
 }
@@ -193,11 +156,10 @@ html+="</tr></table></div>";
 return html;
 }
 
-function addNote(date){
-let text=prompt("Tulis catatan:");
-if(text){
-saveNote(date,text);
-location.reload();
+function addNote(date,cell){
+let note=prompt("Tulis catatan:");
+if(note){
+document.getElementById("note-"+date).innerText=note;
 }
 }
 
@@ -205,32 +167,12 @@ let all="";
 for(let m=1;m<=11;m++) all+=createCalendar(m,2025);
 document.getElementById("calendar").innerHTML=all;
 
-/* TODO LIST */
 function addTodo(){
 let input=document.getElementById("todoInput");
-if(!input.value) return;
-let todos=JSON.parse(localStorage.getItem("todos")||"[]");
-todos.push(input.value);
-localStorage.setItem("todos",JSON.stringify(todos));
-renderTodos();
-input.value="";
-}
-
-function renderTodos(){
-let todos=JSON.parse(localStorage.getItem("todos")||"[]");
-let ul=document.getElementById("todoList");
-ul.innerHTML="";
-todos.forEach(t=>{
 let li=document.createElement("li");
-li.innerText=t;
-ul.appendChild(li);
-});
-}
-renderTodos();
-
-/* EXPORT PDF */
-function exportPDF(){
-html2pdf().from(document.getElementById("app")).save("Kalender2025.pdf");
+li.innerText=input.value;
+document.getElementById("todoList").appendChild(li);
+input.value="";
 }
 
 </script>
