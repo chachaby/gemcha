@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Kalender 2025 Print A4 - Bisa Noted</title>
+<title>Kalender 2025 Planner</title>
 
 <style>
 @page {
@@ -11,22 +11,20 @@
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
-    background: #fff0f6;
+    background: #ffffff;
 }
 
 .page {
-    width: 100%;
-    min-height: 100vh;
     page-break-after: always;
-    box-sizing: border-box;
 }
 
 h1 {
     text-align: center;
+    margin-bottom: 20px;
     color: #c2185b;
-    margin-bottom: 15px;
+    font-size: 28px;
 }
 
 table {
@@ -37,53 +35,53 @@ table {
 th {
     background: #ec407a;
     color: white;
-    padding: 8px;
-    font-size: 14px;
+    padding: 10px;
+    font-size: 16px;
 }
 
 td {
-    border: 1px solid #f8bbd0;
+    border: 1px solid #ddd;
+    height: 110px;
     vertical-align: top;
-    height: 90px;
-    padding: 5px;
+    padding: 6px;
     position: relative;
 }
 
 .date-number {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 15px;
+    margin-bottom: 4px;
 }
 
+/* Area tulis bergaris */
 .note-area {
     width: 100%;
-    height: 65px;
+    height: 75px;
     border: none;
     resize: none;
-    font-size: 11px;
-    background: transparent;
+    font-size: 12px;
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 18px,
+            #f8bbd0 19px
+        );
+    line-height: 19px;
     outline: none;
 }
 
+/* Warna libur */
 .libur {
-    background: #ff80ab;
-    color: white;
+    background: #ff80ab30;
 }
 
 .cuti {
-    background: #ffc1e3;
+    background: #ffc1e330;
 }
 
 .empty {
-    background: #fafafa;
-}
-
-@media print {
-    body {
-        background: white;
-    }
-    .note-area {
-        border: none;
-    }
+    background: #f9f9f9;
 }
 </style>
 </head>
@@ -97,39 +95,23 @@ const months = ["Januari","Februari","Maret","April","Mei","Juni",
 
 const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
 
-// LIBUR NASIONAL 2025
+// Libur Nasional
 const liburNasional = {
-"2025-01-01":"Tahun Baru",
-"2025-01-27":"Isra Mi'raj",
-"2025-01-29":"Imlek",
-"2025-03-29":"Nyepi",
-"2025-03-31":"Idul Fitri",
-"2025-04-01":"Idul Fitri",
-"2025-04-18":"Wafat Yesus",
-"2025-04-20":"Paskah",
-"2025-05-01":"Hari Buruh",
-"2025-05-12":"Waisak",
-"2025-05-29":"Kenaikan Yesus",
-"2025-06-01":"Hari Lahir Pancasila",
-"2025-06-06":"Idul Adha",
-"2025-06-27":"Tahun Baru Islam",
-"2025-08-17":"Hari Kemerdekaan",
-"2025-09-05":"Maulid Nabi",
-"2025-12-25":"Natal"
+"2025-01-01":1,"2025-01-27":1,"2025-01-29":1,
+"2025-03-29":1,"2025-03-31":1,
+"2025-04-01":1,"2025-04-18":1,"2025-04-20":1,
+"2025-05-01":1,"2025-05-12":1,"2025-05-29":1,
+"2025-06-01":1,"2025-06-06":1,"2025-06-27":1,
+"2025-08-17":1,"2025-09-05":1,"2025-12-25":1
 };
 
-// CUTI BERSAMA 2025
+// Cuti Bersama
 const cutiBersama = {
-"2025-04-02":"Cuti Idul Fitri",
-"2025-04-03":"Cuti Idul Fitri",
-"2025-04-04":"Cuti Idul Fitri",
-"2025-05-13":"Cuti Waisak",
-"2025-05-30":"Cuti Kenaikan Yesus",
-"2025-12-26":"Cuti Natal"
+"2025-04-02":1,"2025-04-03":1,"2025-04-04":1,
+"2025-05-13":1,"2025-05-30":1,"2025-12-26":1
 };
 
 let firstDay = 4; // 1 Januari 2025 = Kamis
-
 const container = document.getElementById("calendar");
 
 for (let m = 0; m < 12; m++) {
@@ -142,66 +124,5 @@ for (let m = 0; m < 12; m++) {
     page.appendChild(title);
 
     let table = document.createElement("table");
-    let headerRow = document.createElement("tr");
-    const dayNames = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
 
-    dayNames.forEach(day => {
-        let th = document.createElement("th");
-        th.innerText = day;
-        headerRow.appendChild(th);
-    });
-
-    table.appendChild(headerRow);
-
-    let row = document.createElement("tr");
-
-    for (let i = 0; i < firstDay; i++) {
-        let cell = document.createElement("td");
-        cell.className = "empty";
-        row.appendChild(cell);
-    }
-
-    let date = 1;
-
-    while (date <= daysInMonth[m]) {
-
-        if ((firstDay + date - 1) % 7 === 0 && date !== 1) {
-            table.appendChild(row);
-            row = document.createElement("tr");
-        }
-
-        let cell = document.createElement("td");
-
-        let mo = (m+1).toString().padStart(2,'0');
-        let d = date.toString().padStart(2,'0');
-        let key = `2025-${mo}-${d}`;
-
-        if (liburNasional[key]) {
-            cell.classList.add("libur");
-            cell.title = liburNasional[key];
-        }
-
-        if (cutiBersama[key]) {
-            cell.classList.add("cuti");
-            cell.title = cutiBersama[key];
-        }
-
-        cell.innerHTML = `
-            <div class="date-number">${date}</div>
-            <textarea class="note-area" placeholder="Tulis catatan..."></textarea>
-        `;
-
-        row.appendChild(cell);
-        date++;
-    }
-
-    table.appendChild(row);
-    page.appendChild(table);
-    container.appendChild(page);
-
-    firstDay = (firstDay + daysInMonth[m]) % 7;
-}
-</script>
-
-</body>
-</html>
+    let header
