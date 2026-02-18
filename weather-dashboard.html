@@ -3,39 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalender Interaktif 2025</title>
+<title>Kalender PRO FINAL 2025</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 body{
     font-family: Arial;
     margin:0;
     background: linear-gradient(135deg,#ffd1dc,#ffe6f0);
+    transition:0.4s;
 }
-
-.dark{
-    background:#111;
-    color:white;
-}
+.dark{ background:#111; color:white; }
 
 .container{
-    max-width:1000px;
+    max-width:1100px;
     margin:auto;
     padding:20px;
+    animation:fadeIn 1.5s ease;
+}
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1;}
 }
 
 .header{
     display:flex;
     justify-content:space-between;
-    align-items:center;
+    flex-wrap:wrap;
 }
 
 button{
     background:#ff6fa5;
     border:none;
-    padding:8px 12px;
+    padding:10px 14px;
     color:white;
-    border-radius:8px;
+    border-radius:10px;
     cursor:pointer;
+    margin:5px;
 }
 
 .calendar{
@@ -43,11 +48,10 @@ button{
     padding:15px;
     border-radius:15px;
     margin-top:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
-.dark .calendar{
-    background:#222;
-}
+.dark .calendar{background:#222;}
 
 .month{
     text-align:center;
@@ -56,126 +60,4 @@ button{
     font-weight:bold;
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th{
-    background:#ff6fa5;
-    color:white;
-    padding:8px;
-}
-
-td{
-    border:1px solid #eee;
-    height:70px;
-    text-align:right;
-    padding:5px;
-    cursor:pointer;
-}
-
-.holiday{
-    background:#ffccd9;
-}
-
-.note{
-    font-size:10px;
-    color:#d6004c;
-    text-align:left;
-}
-
-.todo{
-    margin-top:20px;
-    background:white;
-    padding:15px;
-    border-radius:15px;
-}
-
-.dark .todo{
-    background:#222;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="header">
-<h2>💖 Kalender Interaktif 2025</h2>
-<button onclick="toggleDark()">🌙 Dark Mode</button>
-</div>
-
-<div id="calendar"></div>
-
-<div class="todo">
-<h3>📝 To-Do List</h3>
-<input id="todoInput" placeholder="Tambah tugas..." style="width:70%">
-<button onclick="addTodo()">Tambah</button>
-<ul id="todoList"></ul>
-</div>
-
-</div>
-
-<script>
-
-const holidays = [
-"2025-02-01","2025-03-29","2025-04-18","2025-05-01",
-"2025-06-01","2025-08-17","2025-12-25"
-];
-
-function toggleDark(){
-document.body.classList.toggle("dark");
-}
-
-function createCalendar(month, year){
-const names=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
-
-let firstDay=new Date(year,month).getDay();
-let days=new Date(year,month+1,0).getDate();
-
-let html="<div class='calendar'>";
-html+="<div class='month'>"+names[month]+" "+year+"</div>";
-html+="<table><tr><th>Min</th><th>Sen</th><th>Sel</th><th>Rab</th><th>Kam</th><th>Jum</th><th>Sab</th></tr><tr>";
-
-for(let i=0;i<firstDay;i++) html+="<td></td>";
-
-for(let d=1;d<=days;d++){
-let dateStr=year+"-"+String(month+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
-let holidayClass=holidays.includes(dateStr)?"holiday":"";
-
-html+=`<td class="${holidayClass}" onclick="addNote('${dateStr}',this)">
-${d}<div class="note" id="note-${dateStr}"></div></td>`;
-
-if((d+firstDay)%7===0) html+="</tr><tr>";
-}
-
-html+="</tr></table></div>";
-return html;
-}
-
-function addNote(date,cell){
-let note=prompt("Tulis catatan:");
-if(note){
-document.getElementById("note-"+date).innerText=note;
-}
-}
-
-let all="";
-for(let m=1;m<=11;m++) all+=createCalendar(m,2025);
-document.getElementById("calendar").innerHTML=all;
-
-function addTodo(){
-let input=document.getElementById("todoInput");
-let li=document.createElement("li");
-li.innerText=input.value;
-document.getElementById("todoList").appendChild(li);
-input.value="";
-}
-
-</script>
-
-</body>
-</html>
+table{width
