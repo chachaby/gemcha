@@ -1,1 +1,181 @@
-<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Weather Dashboard</title>\n    <style>\n        body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }\n        #app { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }\n        h1 { text-align: center; }\n        input { width: calc(100% - 22px); padding: 10px; margin-bottom: 10px; }\n        button { width: 100%; padding: 10px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; }\n        button:hover { background-color: #0056b3; }\n        #weather { margin-top: 20px; }\n    </style>\n</head>\n<body>\n    <div id="app">\n        <h1>Weather Dashboard</h1>\n        <input type="text" id="city" placeholder="Enter city name">\n        <button id="getWeather">Get Weather</button>\n        <div id="weather"></div>\n    </div>\n    <script>\n        const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key\n\n        document.getElementById('getWeather').addEventListener('click', function() {\n            const city = document.getElementById('city').value;\n            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)\n                .then(response => response.json())\n                .then(data => {\n                    if (data.cod === 200) {\n                        const weatherDiv = document.getElementById('weather');\n                        weatherDiv.innerHTML = `<h2>${data.name}</h2>\n                            <p>Temperature: ${data.main.temp} °C</p>\n                            <p>Weather: ${data.weather[0].description}</p>`;\n                    } else {\n                        alert('City not found!');\n                    }\n                })\n                .catch(error => console.error('Error fetching data:', error));\n        });\n    <\/script>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalender Interaktif 2025</title>
+
+<style>
+body{
+    font-family: Arial;
+    margin:0;
+    background: linear-gradient(135deg,#ffd1dc,#ffe6f0);
+}
+
+.dark{
+    background:#111;
+    color:white;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+button{
+    background:#ff6fa5;
+    border:none;
+    padding:8px 12px;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.calendar{
+    background:white;
+    padding:15px;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+.dark .calendar{
+    background:#222;
+}
+
+.month{
+    text-align:center;
+    font-size:22px;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#ff6fa5;
+    color:white;
+    padding:8px;
+}
+
+td{
+    border:1px solid #eee;
+    height:70px;
+    text-align:right;
+    padding:5px;
+    cursor:pointer;
+}
+
+.holiday{
+    background:#ffccd9;
+}
+
+.note{
+    font-size:10px;
+    color:#d6004c;
+    text-align:left;
+}
+
+.todo{
+    margin-top:20px;
+    background:white;
+    padding:15px;
+    border-radius:15px;
+}
+
+.dark .todo{
+    background:#222;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<h2>💖 Kalender Interaktif 2025</h2>
+<button onclick="toggleDark()">🌙 Dark Mode</button>
+</div>
+
+<div id="calendar"></div>
+
+<div class="todo">
+<h3>📝 To-Do List</h3>
+<input id="todoInput" placeholder="Tambah tugas..." style="width:70%">
+<button onclick="addTodo()">Tambah</button>
+<ul id="todoList"></ul>
+</div>
+
+</div>
+
+<script>
+
+const holidays = [
+"2025-02-01","2025-03-29","2025-04-18","2025-05-01",
+"2025-06-01","2025-08-17","2025-12-25"
+];
+
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
+
+function createCalendar(month, year){
+const names=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
+
+let firstDay=new Date(year,month).getDay();
+let days=new Date(year,month+1,0).getDate();
+
+let html="<div class='calendar'>";
+html+="<div class='month'>"+names[month]+" "+year+"</div>";
+html+="<table><tr><th>Min</th><th>Sen</th><th>Sel</th><th>Rab</th><th>Kam</th><th>Jum</th><th>Sab</th></tr><tr>";
+
+for(let i=0;i<firstDay;i++) html+="<td></td>";
+
+for(let d=1;d<=days;d++){
+let dateStr=year+"-"+String(month+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+let holidayClass=holidays.includes(dateStr)?"holiday":"";
+
+html+=`<td class="${holidayClass}" onclick="addNote('${dateStr}',this)">
+${d}<div class="note" id="note-${dateStr}"></div></td>`;
+
+if((d+firstDay)%7===0) html+="</tr><tr>";
+}
+
+html+="</tr></table></div>";
+return html;
+}
+
+function addNote(date,cell){
+let note=prompt("Tulis catatan:");
+if(note){
+document.getElementById("note-"+date).innerText=note;
+}
+}
+
+let all="";
+for(let m=1;m<=11;m++) all+=createCalendar(m,2025);
+document.getElementById("calendar").innerHTML=all;
+
+function addTodo(){
+let input=document.getElementById("todoInput");
+let li=document.createElement("li");
+li.innerText=input.value;
+document.getElementById("todoList").appendChild(li);
+input.value="";
+}
+
+</script>
+
+</body>
+</html>
