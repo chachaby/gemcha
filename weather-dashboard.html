@@ -3,237 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalender PRO 2025</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<title>Kalender Style App</title>
 
 <style>
 body{
     font-family: Arial;
-    margin:0;
-    background: linear-gradient(135deg,#ffd1dc,#ffe6f0);
-    transition:0.4s;
+    background:#f3d6e1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
 
-.dark{
-    background:#111;
-    color:white;
-}
-
-.container{
-    max-width:1100px;
-    margin:auto;
+.card{
+    width:350px;
+    background:linear-gradient(180deg,#b0005f,#a00060);
+    border-radius:20px;
     padding:20px;
-    animation:fadeIn 1.5s ease;
-}
-
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(20px);}
-to{opacity:1;}
+    color:white;
+    box-shadow:0 10px 25px rgba(0,0,0,.3);
 }
 
 .header{
     display:flex;
     justify-content:space-between;
-    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:20px;
 }
-
-button{
-    background:#ff6fa5;
-    border:none;
-    padding:10px 14px;
-    color:white;
-    border-radius:10px;
-    cursor:pointer;
-    margin:5px;
-}
-
-.calendar{
-    background:white;
-    padding:15px;
-    border-radius:15px;
-    margin-top:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.2);
-    animation:fadeIn 1s ease;
-}
-
-.dark .calendar{background:#222;}
 
 .month{
-    text-align:center;
-    font-size:22px;
-    margin-bottom:10px;
+    background:rgba(255,255,255,.15);
+    padding:10px 15px;
+    border-radius:10px;
     font-weight:bold;
 }
 
-table{width:100%;border-collapse:collapse;}
-
-th{
-    background:#ff6fa5;
-    color:white;
-    padding:8px;
+.days, .dates{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    text-align:center;
 }
 
-td{
-    border:1px solid #eee;
-    height:75px;
-    text-align:right;
-    padding:5px;
+.days div{
+    opacity:.8;
+    margin-bottom:10px;
+}
+
+.dates div{
+    padding:12px;
+    margin:5px;
+    border-radius:50%;
     cursor:pointer;
-    position:relative;
+    transition:.2s;
 }
 
-.holiday{
-    background:#ffd6e7;
+.dates div:hover{
+    background:rgba(255,255,255,.2);
 }
 
-.note{
-    font-size:11px;
-    color:#d6004c;
-    text-align:left;
+.active{
+    background:#ff4db3;
 }
 
-.todo{
+.footer{
     margin-top:20px;
-    background:white;
-    padding:15px;
-    border-radius:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-.dark .todo{background:#222;}
-
+.btn{
+    background:rgba(255,255,255,.15);
+    padding:8px 12px;
+    border-radius:10px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="container" id="app">
+<div class="card">
 
 <div class="header">
-<h2>💖 Kalender PRO 2025</h2>
-<div>
-<button onclick="toggleDark()">🌙 Dark</button>
-<button onclick="exportPDF()">📄 Export PDF</button>
-</div>
+<div class="month">Februari 2026</div>
+<div>▲ ▼</div>
 </div>
 
-<div id="calendar"></div>
+<div class="days">
+<div>Min</div><div>Sen</div><div>Sel</div>
+<div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
+</div>
 
-<div class="todo">
-<h3>📝 To-Do List</h3>
-<input id="todoInput" placeholder="Tambah tugas..." style="width:70%">
-<button onclick="addTodo()">Tambah</button>
-<ul id="todoList"></ul>
+<div class="dates">
+<div>1</div><div>2</div><div>3</div><div>4</div>
+<div>5</div><div>6</div><div>7</div>
+
+<div>8</div><div>9</div><div>10</div><div>11</div>
+<div>12</div><div>13</div><div>14</div>
+
+<div>15</div><div>16</div><div>17</div>
+<div class="active">18</div>
+<div>19</div><div>20</div><div>21</div>
+
+<div>22</div><div>23</div><div>24</div>
+<div>25</div><div>26</div><div>27</div><div>28</div>
+</div>
+
+<div class="footer">
+<div class="btn">− 30 mins +</div>
+<div class="btn">▶ Focus</div>
 </div>
 
 </div>
-
-<script>
-
-const holidays = {
-"2025-01-01":"Tahun Baru",
-"2025-01-27":"Isra Mi'raj",
-"2025-01-29":"Imlek",
-"2025-03-29":"Nyepi",
-"2025-03-31":"Idul Fitri",
-"2025-04-01":"Idul Fitri",
-"2025-04-18":"Wafat Isa Almasih",
-"2025-04-20":"Paskah",
-"2025-05-01":"Hari Buruh",
-"2025-05-12":"Waisak",
-"2025-05-29":"Kenaikan Isa",
-"2025-06-01":"Pancasila",
-"2025-06-07":"Idul Adha",
-"2025-06-27":"Tahun Baru Islam",
-"2025-08-17":"Kemerdekaan",
-"2025-09-05":"Maulid Nabi",
-"2025-12-25":"Natal"
-};
-
-function toggleDark(){
-document.body.classList.toggle("dark");
-}
-
-function saveNote(date,text){
-localStorage.setItem(date,text);
-}
-
-function getNote(date){
-return localStorage.getItem(date) || "";
-}
-
-function createCalendar(month,year){
-const names=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
-
-let firstDay=new Date(year,month).getDay();
-let days=new Date(year,month+1,0).getDate();
-
-let html="<div class='calendar'>";
-html+="<div class='month'>"+names[month]+" "+year+"</div>";
-html+="<table><tr><th>Min</th><th>Sen</th><th>Sel</th><th>Rab</th><th>Kam</th><th>Jum</th><th>Sab</th></tr><tr>";
-
-for(let i=0;i<firstDay;i++) html+="<td></td>";
-
-for(let d=1;d<=days;d++){
-let dateStr=year+"-"+String(month+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
-let holidayClass=holidays[dateStr]?"holiday":"";
-let note=getNote(dateStr);
-
-html+=`
-<td class="${holidayClass}" onclick="addNote('${dateStr}')">
-${d}
-<div class="note">${holidays[dateStr] || ""}</div>
-<div class="note" id="note-${dateStr}">${note}</div>
-</td>`;
-
-if((d+firstDay)%7===0) html+="</tr><tr>";
-}
-
-html+="</tr></table></div>";
-return html;
-}
-
-function addNote(date){
-let text=prompt("Tulis catatan:");
-if(text){
-saveNote(date,text);
-location.reload();
-}
-}
-
-let all="";
-for(let m=1;m<=11;m++) all+=createCalendar(m,2025);
-document.getElementById("calendar").innerHTML=all;
-
-/* TODO LIST */
-function addTodo(){
-let input=document.getElementById("todoInput");
-if(!input.value) return;
-let todos=JSON.parse(localStorage.getItem("todos")||"[]");
-todos.push(input.value);
-localStorage.setItem("todos",JSON.stringify(todos));
-renderTodos();
-input.value="";
-}
-
-function renderTodos(){
-let todos=JSON.parse(localStorage.getItem("todos")||"[]");
-let ul=document.getElementById("todoList");
-ul.innerHTML="";
-todos.forEach(t=>{
-let li=document.createElement("li");
-li.innerText=t;
-ul.appendChild(li);
-});
-}
-renderTodos();
-
-/* EXPORT PDF */
-function exportPDF(){
-html2pdf().from(document.getElementById("app")).save("Kalender2025.pdf");
-}
-
-</script>
 
 </body>
 </html>
