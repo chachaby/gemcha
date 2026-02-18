@@ -2,119 +2,208 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalender Style App</title>
+<title>Kalender 2025 Print A4</title>
 
 <style>
-body{
-    font-family: Arial;
-    background:#f3d6e1;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+@page {
+    size: A4 portrait;
+    margin: 15mm;
 }
 
-.card{
-    width:350px;
-    background:linear-gradient(180deg,#b0005f,#a00060);
-    border-radius:20px;
-    padding:20px;
-    color:white;
-    box-shadow:0 10px 25px rgba(0,0,0,.3);
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: #fff0f6;
 }
 
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
+.page {
+    width: 100%;
+    min-height: 100vh;
+    page-break-after: always;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
-.month{
-    background:rgba(255,255,255,.15);
-    padding:10px 15px;
-    border-radius:10px;
-    font-weight:bold;
+h1 {
+    text-align: center;
+    color: #c2185b;
+    margin-bottom: 10px;
 }
 
-.days, .dates{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    text-align:center;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
 }
 
-.days div{
-    opacity:.8;
-    margin-bottom:10px;
+th {
+    background: #ec407a;
+    color: white;
+    padding: 8px;
+    font-size: 14px;
 }
 
-.dates div{
-    padding:12px;
-    margin:5px;
-    border-radius:50%;
-    cursor:pointer;
-    transition:.2s;
+td {
+    border: 1px solid #f8bbd0;
+    text-align: center;
+    padding: 12px;
+    height: 45px;
+    font-size: 14px;
 }
 
-.dates div:hover{
-    background:rgba(255,255,255,.2);
+.libur {
+    background: #ff80ab;
+    color: white;
+    font-weight: bold;
 }
 
-.active{
-    background:#ff4db3;
+.cuti {
+    background: #ffc1e3;
+    font-weight: bold;
 }
 
-.footer{
-    margin-top:20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.empty {
+    background: #fafafa;
 }
 
-.btn{
-    background:rgba(255,255,255,.15);
-    padding:8px 12px;
-    border-radius:10px;
+.notes {
+    border: 2px dashed #f48fb1;
+    border-radius: 10px;
+    padding: 15px;
+    min-height: 150px;
+}
+
+.notes h3 {
+    margin-top: 0;
+    color: #ad1457;
+}
+
+@media print {
+    body {
+        background: white;
+    }
 }
 </style>
 </head>
-
 <body>
 
-<div class="card">
+<div id="calendar"></div>
 
-<div class="header">
-<div class="month">Februari 2026</div>
-<div>▲ ▼</div>
-</div>
+<script>
+const months = ["Januari","Februari","Maret","April","Mei","Juni",
+"Juli","Agustus","September","Oktober","November","Desember"];
 
-<div class="days">
-<div>Min</div><div>Sen</div><div>Sel</div>
-<div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
-</div>
+const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
 
-<div class="dates">
-<div>1</div><div>2</div><div>3</div><div>4</div>
-<div>5</div><div>6</div><div>7</div>
+// LIBUR NASIONAL 2025
+const liburNasional = {
+"2025-01-01":"Tahun Baru",
+"2025-01-27":"Isra Mi'raj",
+"2025-01-29":"Imlek",
+"2025-03-29":"Nyepi",
+"2025-03-31":"Idul Fitri",
+"2025-04-01":"Idul Fitri",
+"2025-04-18":"Wafat Yesus",
+"2025-04-20":"Paskah",
+"2025-05-01":"Hari Buruh",
+"2025-05-12":"Waisak",
+"2025-05-29":"Kenaikan Yesus",
+"2025-06-01":"Hari Lahir Pancasila",
+"2025-06-06":"Idul Adha",
+"2025-06-27":"Tahun Baru Islam",
+"2025-08-17":"Hari Kemerdekaan",
+"2025-09-05":"Maulid Nabi",
+"2025-12-25":"Natal"
+};
 
-<div>8</div><div>9</div><div>10</div><div>11</div>
-<div>12</div><div>13</div><div>14</div>
+// CUTI BERSAMA 2025
+const cutiBersama = {
+"2025-04-02":"Cuti Idul Fitri",
+"2025-04-03":"Cuti Idul Fitri",
+"2025-04-04":"Cuti Idul Fitri",
+"2025-05-13":"Cuti Waisak",
+"2025-05-30":"Cuti Kenaikan Yesus",
+"2025-12-26":"Cuti Natal"
+};
 
-<div>15</div><div>16</div><div>17</div>
-<div class="active">18</div>
-<div>19</div><div>20</div><div>21</div>
+let firstDay = 4; // 1 Januari 2025 = Kamis
 
-<div>22</div><div>23</div><div>24</div>
-<div>25</div><div>26</div><div>27</div><div>28</div>
-</div>
+const container = document.getElementById("calendar");
 
-<div class="footer">
-<div class="btn">− 30 mins +</div>
-<div class="btn">▶ Focus</div>
-</div>
+for (let m = 0; m < 12; m++) {
 
-</div>
+    let page = document.createElement("div");
+    page.className = "page";
+
+    let title = document.createElement("h1");
+    title.innerText = months[m] + " 2025";
+    page.appendChild(title);
+
+    let table = document.createElement("table");
+    let headerRow = document.createElement("tr");
+    const dayNames = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
+
+    dayNames.forEach(day => {
+        let th = document.createElement("th");
+        th.innerText = day;
+        headerRow.appendChild(th);
+    });
+
+    table.appendChild(headerRow);
+
+    let row = document.createElement("tr");
+
+    for (let i = 0; i < firstDay; i++) {
+        let cell = document.createElement("td");
+        cell.className = "empty";
+        row.appendChild(cell);
+    }
+
+    let date = 1;
+
+    while (date <= daysInMonth[m]) {
+
+        if ((firstDay + date - 1) % 7 === 0 && date !== 1) {
+            table.appendChild(row);
+            row = document.createElement("tr");
+        }
+
+        let cell = document.createElement("td");
+
+        let mo = (m+1).toString().padStart(2,'0');
+        let d = date.toString().padStart(2,'0');
+        let key = `2025-${mo}-${d}`;
+
+        if (liburNasional[key]) {
+            cell.className = "libur";
+            cell.title = liburNasional[key];
+        }
+
+        if (cutiBersama[key]) {
+            cell.className = "cuti";
+            cell.title = cutiBersama[key];
+        }
+
+        cell.innerText = date;
+        row.appendChild(cell);
+        date++;
+    }
+
+    table.appendChild(row);
+    page.appendChild(table);
+
+    // KOLOM CATATAN
+    let notes = document.createElement("div");
+    notes.className = "notes";
+    notes.innerHTML = "<h3>Catatan Bulan Ini:</h3><p>..............................................................<br><br>..............................................................<br><br>..............................................................</p>";
+
+    page.appendChild(notes);
+
+    container.appendChild(page);
+
+    firstDay = (firstDay + daysInMonth[m]) % 7;
+}
+</script>
 
 </body>
 </html>
