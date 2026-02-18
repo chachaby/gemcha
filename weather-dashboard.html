@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalender PRO FINAL 2025</title>
+<title>Kalender PRO 2025</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -14,7 +14,11 @@ body{
     background: linear-gradient(135deg,#ffd1dc,#ffe6f0);
     transition:0.4s;
 }
-.dark{ background:#111; color:white; }
+
+.dark{
+    background:#111;
+    color:white;
+}
 
 .container{
     max-width:1100px;
@@ -22,6 +26,7 @@ body{
     padding:20px;
     animation:fadeIn 1.5s ease;
 }
+
 @keyframes fadeIn{
 from{opacity:0; transform:translateY(20px);}
 to{opacity:1;}
@@ -49,6 +54,7 @@ button{
     border-radius:15px;
     margin-top:20px;
     box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    animation:fadeIn 1s ease;
 }
 
 .dark .calendar{background:#222;}
@@ -74,9 +80,12 @@ td{
     text-align:right;
     padding:5px;
     cursor:pointer;
+    position:relative;
 }
 
-.holiday{ background:#ffd6e7; }
+.holiday{
+    background:#ffd6e7;
+}
 
 .note{
     font-size:11px;
@@ -92,6 +101,7 @@ td{
 }
 
 .dark .todo{background:#222;}
+
 </style>
 </head>
 
@@ -100,7 +110,7 @@ td{
 <div class="container" id="app">
 
 <div class="header">
-<h2>💖 Kalender PRO FINAL 2025</h2>
+<h2>💖 Kalender PRO 2025</h2>
 <div>
 <button onclick="toggleDark()">🌙 Dark</button>
 <button onclick="exportPDF()">📄 Export PDF</button>
@@ -127,7 +137,7 @@ const holidays = {
 "2025-03-29":"Nyepi",
 "2025-03-31":"Idul Fitri",
 "2025-04-01":"Idul Fitri",
-"2025-04-18":"Wafat Isa",
+"2025-04-18":"Wafat Isa Almasih",
 "2025-04-20":"Paskah",
 "2025-05-01":"Hari Buruh",
 "2025-05-12":"Waisak",
@@ -173,7 +183,7 @@ html+=`
 <td class="${holidayClass}" onclick="addNote('${dateStr}')">
 ${d}
 <div class="note">${holidays[dateStr] || ""}</div>
-<div class="note">${note}</div>
+<div class="note" id="note-${dateStr}">${note}</div>
 </td>`;
 
 if((d+firstDay)%7===0) html+="</tr><tr>";
@@ -191,7 +201,6 @@ location.reload();
 }
 }
 
-/* GENERATE CALENDAR */
 let all="";
 for(let m=1;m<=11;m++) all+=createCalendar(m,2025);
 document.getElementById("calendar").innerHTML=all;
@@ -224,23 +233,7 @@ function exportPDF(){
 html2pdf().from(document.getElementById("app")).save("Kalender2025.pdf");
 }
 
-/* REMINDER OTOMATIS */
-function checkReminder(){
-let today=new Date();
-let dateStr=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
-
-let note=localStorage.getItem(dateStr);
-
-if(note){
-setTimeout(()=>{
-alert("📌 Reminder Hari Ini:\n\n"+note);
-},1000);
-}
-}
-checkReminder();
-
 </script>
 
 </body>
 </html>
-
