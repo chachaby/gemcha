@@ -60,4 +60,187 @@ button{
     font-weight:bold;
 }
 
-table{width
+table{width:100%;border-collapse:collapse;}
+
+th{
+    background:#ff6fa5;
+    color:white;
+    padding:8px;
+}
+
+td{
+    border:1px solid #eee;
+    height:75px;
+    text-align:right;
+    padding:5px;
+    cursor:pointer;
+}
+
+.holiday{ background:#ffd6e7; }
+
+.note{
+    font-size:11px;
+    color:#d6004c;
+    text-align:left;
+}
+
+.todo{
+    margin-top:20px;
+    background:white;
+    padding:15px;
+    border-radius:15px;
+}
+
+.dark .todo{background:#222;}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app">
+
+<div class="header">
+<h2>💖 Kalender PRO FINAL 2025</h2>
+<div>
+<button onclick="toggleDark()">🌙 Dark</button>
+<button onclick="exportPDF()">📄 Export PDF</button>
+</div>
+</div>
+
+<div id="calendar"></div>
+
+<div class="todo">
+<h3>📝 To-Do List</h3>
+<input id="todoInput" placeholder="Tambah tugas..." style="width:70%">
+<button onclick="addTodo()">Tambah</button>
+<ul id="todoList"></ul>
+</div>
+
+</div>
+
+<script>
+
+const holidays = {
+"2025-01-01":"Tahun Baru",
+"2025-01-27":"Isra Mi'raj",
+"2025-01-29":"Imlek",
+"2025-03-29":"Nyepi",
+"2025-03-31":"Idul Fitri",
+"2025-04-01":"Idul Fitri",
+"2025-04-18":"Wafat Isa",
+"2025-04-20":"Paskah",
+"2025-05-01":"Hari Buruh",
+"2025-05-12":"Waisak",
+"2025-05-29":"Kenaikan Isa",
+"2025-06-01":"Pancasila",
+"2025-06-07":"Idul Adha",
+"2025-06-27":"Tahun Baru Islam",
+"2025-08-17":"Kemerdekaan",
+"2025-09-05":"Maulid Nabi",
+"2025-12-25":"Natal"
+};
+
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
+
+function saveNote(date,text){
+localStorage.setItem(date,text);
+}
+
+function getNote(date){
+return localStorage.getItem(date) || "";
+}
+
+function createCalendar(month,year){
+const names=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
+
+let firstDay=new Date(year,month).getDay();
+let days=new Date(year,month+1,0).getDate();
+
+let html="<div class='calendar'>";
+html+="<div class='month'>"+names[month]+" "+year+"</div>";
+html+="<table><tr><th>Min</th><th>Sen</th><th>Sel</th><th>Rab</th><th>Kam</th><th>Jum</th><th>Sab</th></tr><tr>";
+
+for(let i=0;i<firstDay;i++) html+="<td></td>";
+
+for(let d=1;d<=days;d++){
+let dateStr=year+"-"+String(month+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+let holidayClass=holidays[dateStr]?"holiday":"";
+let note=getNote(dateStr);
+
+html+=`
+<td class="${holidayClass}" onclick="addNote('${dateStr}')">
+${d}
+<div class="note">${holidays[dateStr] || ""}</div>
+<div class="note">${note}</div>
+</td>`;
+
+if((d+firstDay)%7===0) html+="</tr><tr>";
+}
+
+html+="</tr></table></div>";
+return html;
+}
+
+function addNote(date){
+let text=prompt("Tulis catatan:");
+if(text){
+saveNote(date,text);
+location.reload();
+}
+}
+
+/* GENERATE CALENDAR */
+let all="";
+for(let m=1;m<=11;m++) all+=createCalendar(m,2025);
+document.getElementById("calendar").innerHTML=all;
+
+/* TODO LIST */
+function addTodo(){
+let input=document.getElementById("todoInput");
+if(!input.value) return;
+let todos=JSON.parse(localStorage.getItem("todos")||"[]");
+todos.push(input.value);
+localStorage.setItem("todos",JSON.stringify(todos));
+renderTodos();
+input.value="";
+}
+
+function renderTodos(){
+let todos=JSON.parse(localStorage.getItem("todos")||"[]");
+let ul=document.getElementById("todoList");
+ul.innerHTML="";
+todos.forEach(t=>{
+let li=document.createElement("li");
+li.innerText=t;
+ul.appendChild(li);
+});
+}
+renderTodos();
+
+/* EXPORT PDF */
+function exportPDF(){
+html2pdf().from(document.getElementById("app")).save("Kalender2025.pdf");
+}
+
+/* REMINDER OTOMATIS */
+function checkReminder(){
+let today=new Date();
+let dateStr=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
+
+let note=localStorage.getItem(dateStr);
+
+if(note){
+setTimeout(()=>{
+alert("📌 Reminder Hari Ini:\n\n"+note);
+},1000);
+}
+}
+checkReminder();
+
+</script>
+
+</body>
+</html>
+
