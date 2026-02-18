@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Kalender 2025 Planner Final</title>
+<title>Kalender 2025 Planner Auto Save</title>
 
 <style>
 @page {
@@ -52,7 +52,6 @@ td {
     margin-bottom: 4px;
 }
 
-/* Area tulis bergaris seperti agenda */
 .note-area {
     width: 100%;
     height: 80px;
@@ -70,7 +69,6 @@ td {
     outline: none;
 }
 
-/* Warna libur */
 .libur {
     background: #ff80ab33;
 }
@@ -94,87 +92,8 @@ const months = ["Januari","Februari","Maret","April","Mei","Juni",
 
 const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
 
-// LIBUR NASIONAL 2025
 const liburNasional = {
 "2025-01-01":1,"2025-01-27":1,"2025-01-29":1,
 "2025-03-29":1,"2025-03-31":1,
 "2025-04-01":1,"2025-04-18":1,"2025-04-20":1,
-"2025-05-01":1,"2025-05-12":1,"2025-05-29":1,
-"2025-06-01":1,"2025-06-06":1,"2025-06-27":1,
-"2025-08-17":1,"2025-09-05":1,"2025-12-25":1
-};
-
-// CUTI BERSAMA 2025
-const cutiBersama = {
-"2025-04-02":1,"2025-04-03":1,"2025-04-04":1,
-"2025-05-13":1,"2025-05-30":1,"2025-12-26":1
-};
-
-let firstDay = 4; // 1 Januari 2025 = Kamis
-
-const container = document.getElementById("calendar");
-
-for (let m = 0; m < 12; m++) {
-
-    let page = document.createElement("div");
-    page.className = "page";
-
-    let title = document.createElement("h1");
-    title.innerText = months[m] + " 2025";
-    page.appendChild(title);
-
-    let table = document.createElement("table");
-
-    let headerRow = document.createElement("tr");
-    ["Min","Sen","Sel","Rab","Kam","Jum","Sab"].forEach(day => {
-        let th = document.createElement("th");
-        th.innerText = day;
-        headerRow.appendChild(th);
-    });
-    table.appendChild(headerRow);
-
-    let row = document.createElement("tr");
-
-    for (let i = 0; i < firstDay; i++) {
-        let cell = document.createElement("td");
-        cell.className = "empty";
-        row.appendChild(cell);
-    }
-
-    let date = 1;
-
-    while (date <= daysInMonth[m]) {
-
-        if ((firstDay + date - 1) % 7 === 0 && date !== 1) {
-            table.appendChild(row);
-            row = document.createElement("tr");
-        }
-
-        let cell = document.createElement("td");
-
-        let mo = String(m+1).padStart(2,'0');
-        let d = String(date).padStart(2,'0');
-        let key = `2025-${mo}-${d}`;
-
-        if (liburNasional[key]) cell.classList.add("libur");
-        if (cutiBersama[key]) cell.classList.add("cuti");
-
-        cell.innerHTML = `
-            <div class="date-number">${date}</div>
-            <textarea class="note-area" placeholder="Tulis catatan..."></textarea>
-        `;
-
-        row.appendChild(cell);
-        date++;
-    }
-
-    table.appendChild(row);
-    page.appendChild(table);
-    container.appendChild(page);
-
-    firstDay = (firstDay + daysInMonth[m]) % 7;
-}
-</script>
-
-</body>
-</html>
+"2025-0
