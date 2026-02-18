@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Kalender 2025 Print A4</title>
+<title>Kalender 2025 Print A4 - Bisa Noted</title>
 
 <style>
 @page {
@@ -20,20 +20,18 @@ body {
     width: 100%;
     min-height: 100vh;
     page-break-after: always;
-    padding: 10px;
     box-sizing: border-box;
 }
 
 h1 {
     text-align: center;
     color: #c2185b;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15px;
 }
 
 th {
@@ -45,165 +43,21 @@ th {
 
 td {
     border: 1px solid #f8bbd0;
-    text-align: center;
-    padding: 12px;
-    height: 45px;
+    vertical-align: top;
+    height: 90px;
+    padding: 5px;
+    position: relative;
+}
+
+.date-number {
+    font-weight: bold;
     font-size: 14px;
 }
 
-.libur {
-    background: #ff80ab;
-    color: white;
-    font-weight: bold;
-}
-
-.cuti {
-    background: #ffc1e3;
-    font-weight: bold;
-}
-
-.empty {
-    background: #fafafa;
-}
-
-.notes {
-    border: 2px dashed #f48fb1;
-    border-radius: 10px;
-    padding: 15px;
-    min-height: 150px;
-}
-
-.notes h3 {
-    margin-top: 0;
-    color: #ad1457;
-}
-
-@media print {
-    body {
-        background: white;
-    }
-}
-</style>
-</head>
-<body>
-
-<div id="calendar"></div>
-
-<script>
-const months = ["Januari","Februari","Maret","April","Mei","Juni",
-"Juli","Agustus","September","Oktober","November","Desember"];
-
-const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
-
-// LIBUR NASIONAL 2025
-const liburNasional = {
-"2025-01-01":"Tahun Baru",
-"2025-01-27":"Isra Mi'raj",
-"2025-01-29":"Imlek",
-"2025-03-29":"Nyepi",
-"2025-03-31":"Idul Fitri",
-"2025-04-01":"Idul Fitri",
-"2025-04-18":"Wafat Yesus",
-"2025-04-20":"Paskah",
-"2025-05-01":"Hari Buruh",
-"2025-05-12":"Waisak",
-"2025-05-29":"Kenaikan Yesus",
-"2025-06-01":"Hari Lahir Pancasila",
-"2025-06-06":"Idul Adha",
-"2025-06-27":"Tahun Baru Islam",
-"2025-08-17":"Hari Kemerdekaan",
-"2025-09-05":"Maulid Nabi",
-"2025-12-25":"Natal"
-};
-
-// CUTI BERSAMA 2025
-const cutiBersama = {
-"2025-04-02":"Cuti Idul Fitri",
-"2025-04-03":"Cuti Idul Fitri",
-"2025-04-04":"Cuti Idul Fitri",
-"2025-05-13":"Cuti Waisak",
-"2025-05-30":"Cuti Kenaikan Yesus",
-"2025-12-26":"Cuti Natal"
-};
-
-let firstDay = 4; // 1 Januari 2025 = Kamis
-
-const container = document.getElementById("calendar");
-
-for (let m = 0; m < 12; m++) {
-
-    let page = document.createElement("div");
-    page.className = "page";
-
-    let title = document.createElement("h1");
-    title.innerText = months[m] + " 2025";
-    page.appendChild(title);
-
-    let table = document.createElement("table");
-    let headerRow = document.createElement("tr");
-    const dayNames = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
-
-    dayNames.forEach(day => {
-        let th = document.createElement("th");
-        th.innerText = day;
-        headerRow.appendChild(th);
-    });
-
-    table.appendChild(headerRow);
-
-    let row = document.createElement("tr");
-
-    for (let i = 0; i < firstDay; i++) {
-        let cell = document.createElement("td");
-        cell.className = "empty";
-        row.appendChild(cell);
-    }
-
-    let date = 1;
-
-    while (date <= daysInMonth[m]) {
-
-        if ((firstDay + date - 1) % 7 === 0 && date !== 1) {
-            table.appendChild(row);
-            row = document.createElement("tr");
-        }
-
-        let cell = document.createElement("td");
-
-        let mo = (m+1).toString().padStart(2,'0');
-        let d = date.toString().padStart(2,'0');
-        let key = `2025-${mo}-${d}`;
-
-        if (liburNasional[key]) {
-            cell.className = "libur";
-            cell.title = liburNasional[key];
-        }
-
-        if (cutiBersama[key]) {
-            cell.className = "cuti";
-            cell.title = cutiBersama[key];
-        }
-
-        cell.innerText = date;
-        row.appendChild(cell);
-        date++;
-    }
-
-    table.appendChild(row);
-    page.appendChild(table);
-
-    // KOLOM CATATAN
-    let notes = document.createElement("div");
-    notes.className = "notes";
-    notes.innerHTML = "<h3>Catatan Bulan Ini:</h3><p>..............................................................<br><br>..............................................................<br><br>..............................................................</p>";
-
-    page.appendChild(notes);
-
-    container.appendChild(page);
-
-    firstDay = (firstDay + daysInMonth[m]) % 7;
-}
-</script>
-
-</body>
-</html>
+.note-area {
+    width: 100%;
+    height: 65px;
+    border: none;
+    resize: none;
+    font-size: 11px;
+    background: transparent;
